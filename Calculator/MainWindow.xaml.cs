@@ -24,23 +24,23 @@ namespace Calculator
         public string leftNumber = "", rightNumber = "", operation = "";
         public string text = "";
         double firstNumber, secondNumber, result;
-        const string error = "Error: numbers can not be devided by zero";
+        const string error = "Error: numbers can not be divided by zero";
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        public void FindShowNumbers(string numberFromBotton, ref string number)
+        public void FindShowNumbers(string numberFromButton, ref string number)
         {
-            if (numberFromBotton == "0" && (number == "" || number == "0"))
+            if (numberFromButton == "0" && (number == "" || number == "0"))
             {
                 number = "0";
             }
             else
             {
                 if (number == "0") { number = ""; }
-                if (number == leftNumber && number == result.ToString()) { number = numberFromBotton; } //TODO
-                else { number += numberFromBotton; }
+                if (number == leftNumber && number == result.ToString()) { number = numberFromButton; }
+                else { number += numberFromButton; }
             }
             BlockExpression.Text = (leftNumber + operation + rightNumber);
         }
@@ -104,25 +104,20 @@ namespace Calculator
             }
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            BlockExpression.Focus();
-        }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            string get = (String)((Button)e.OriginalSource).Content; //поменять название переменной
+            string clickedButton = (String)((Button)e.OriginalSource).Content;
             int ifNumber;
 
-            bool correct = Int32.TryParse(get, out ifNumber);
+            bool correct = Int32.TryParse(clickedButton, out ifNumber);
 
-            if (get == "C")
+            if (clickedButton == "C")
             {
                 BlockExpression.Text = "0";
                 ClearVariables();
             }
 
-            else if (get == "=")
+            else if (clickedButton == "=")
             {
                 if (leftNumber == "")
                 {
@@ -135,7 +130,7 @@ namespace Calculator
                 }
                 else
                 {
-                    CountExpressionResult(get);
+                    CountExpressionResult(clickedButton);
                 }
             }
             else
@@ -144,12 +139,12 @@ namespace Calculator
                 {
                     if (operation == "")
                     {
-                        FindShowNumbers(get, ref leftNumber);
+                        FindShowNumbers(clickedButton, ref leftNumber);
                     }
 
                     else
                     {
-                        FindShowNumbers(get, ref rightNumber);
+                        FindShowNumbers(clickedButton, ref rightNumber);
                     }
                 }
                 else
@@ -160,13 +155,15 @@ namespace Calculator
                         {
                             leftNumber = "0";
                         }
-                        operation = get;
+                        operation = clickedButton;
                         BlockExpression.Text = (leftNumber + operation);
                     }
                     else
                     {
-                        CountExpressionResult(get);
-                        if (get != "=" && BlockExpression.Text != error) { operation = get; }
+                        CountExpressionResult(clickedButton);
+                        if (clickedButton != "=" && BlockExpression.Text != error) { 
+                            operation = clickedButton; 
+                        }
                     }
                 }
             }
