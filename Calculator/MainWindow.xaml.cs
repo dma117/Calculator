@@ -125,8 +125,8 @@ namespace Calculator
                 }
                 else if (leftNumber != "" && rightNumber == "")
                 {
-                    BlockExpression.Text = leftNumber;
-                    operation = "";
+                        BlockExpression.Text = leftNumber;
+                        operation = "=";
                 }
                 else
                 {
@@ -137,8 +137,12 @@ namespace Calculator
             {
                 if (correct == true)
                 {
-                    if (operation == "")
+                    if (operation == "" || operation == "=")
                     {
+                        if (operation == "=") { 
+                            operation = "";
+                            leftNumber = "";
+                        }
                         FindShowNumbers(clickedButton, ref leftNumber);
                     }
 
@@ -166,6 +170,23 @@ namespace Calculator
                         }
                     }
                 }
+            }
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = (MenuItem)sender;
+            string itemValue = menuItem.Header.ToString();
+
+            if (itemValue == "Exit")
+            {
+                Close();
+            }
+            if (itemValue =="Help")
+            {
+                MessageBox.Show("Калькулятор. Выполняет сложение, вычитание, " +
+                    "умножение, деление целых чисел." +
+                    "\nНад созданием работала Донская Мария Андреевна.");
             }
         }
     }

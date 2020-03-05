@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Calculator"
         mc:Ignorable="d"
-        Title="Calculator" Height="450" Width="800">
+        Title="Calculator" Height="450" Width="800"
+        ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
@@ -41,5 +42,12 @@
 
         <TextBlock x:Name="BlockExpression" Text="0" HorizontalAlignment="Center" Grid.Row="0" VerticalAlignment="Center" Grid.ColumnSpan="4"></TextBlock>
 
+        <Menu x:Name="MenuBar" Grid.Row="0" Grid.ColumnSpan="4" FontSize="15" VerticalAlignment="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="Exit" Click="MenuItem_Click"/>
+            </MenuItem>
+            <MenuItem Header="Info" Click="MenuItem_Click"/>
+        </Menu>
+        
     </Grid>
 </Window>
