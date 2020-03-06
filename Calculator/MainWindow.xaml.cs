@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Calculator
 {
@@ -21,13 +10,32 @@ namespace Calculator
     /// 
     public partial class MainWindow : Window
     {
-        public string leftNumber = "", rightNumber = "", operation = "";
-        public string text = "";
-        double firstNumber, secondNumber, result;
+        public string leftNumber = "";
+        public string rightNumber = "";
+        public string operation = "";
+        public string dot = "";
+        double firstNumber;
+        double secondNumber;
+        double result;
         const string error = "Error: numbers can not be divided by zero";
+
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        public void ProcessDivision(string get)
+        {
+            if (secondNumber == 0)
+            {
+                BlockExpression.Text = error;
+                ClearVariables();
+            }
+            else
+            {
+                result = firstNumber / secondNumber;
+                GetExpressionResult(get);
+            }
         }
 
         public void FindShowNumbers(string numberFromButton, ref string number)
@@ -45,12 +53,33 @@ namespace Calculator
             BlockExpression.Text = (leftNumber + operation + rightNumber);
         }
 
+        public void AnalyzeDoubleNumbers(string numberFromButton, ref string number)
+        {
+            if (!number.Contains(","))
+            {
+                if (number == "")
+                {
+                    number = "0,";
+                }
+                else if (number == result.ToString())
+                {
+                    number += numberFromButton;
+                }
+                else
+                {
+                    number += numberFromButton;
+                }
+            }
+
+            BlockExpression.Text = (leftNumber + operation + rightNumber);
+
+        }
+
         public void ClearVariables()
         {
             leftNumber = "";
             rightNumber = "";
             operation = "";
-            text = "";
         }
 
         public void GetExpressionResult(string get)
@@ -62,6 +91,7 @@ namespace Calculator
             }
             else
             {
+
                 BlockExpression.Text = (result.ToString() + get);
                 operation = get;
             }
@@ -72,6 +102,7 @@ namespace Calculator
         {
             firstNumber = double.Parse(leftNumber);
             secondNumber = double.Parse(rightNumber);
+
             switch (operation)
             {
                 case "-":
@@ -87,16 +118,7 @@ namespace Calculator
                     GetExpressionResult(get);
                     break;
                 case "/":
-                    if (rightNumber == "0")
-                    {
-                        BlockExpression.Text = error;
-                        ClearVariables();
-                    }
-                    else
-                    {
-                        result = firstNumber / secondNumber;
-                        GetExpressionResult(get);
-                    }
+                    ProcessDivision(get);
                     break;
                 default:
                     BlockExpression.Text = "0";
@@ -125,12 +147,18 @@ namespace Calculator
                 }
                 else if (leftNumber != "" && rightNumber == "")
                 {
-                        BlockExpression.Text = leftNumber;
-                        operation = "=";
+                    if (leftNumber.Substring(leftNumber.Length - 1) == ",")
+                    {
+                        leftNumber = BlockExpression.Text.Substring(0,
+                            BlockExpression.Text.Length - 1);
+                    }
+                    BlockExpression.Text = leftNumber;
+                    operation = "=";
                 }
                 else
                 {
                     CountExpressionResult(clickedButton);
+                    operation = "=";
                 }
             }
             else
@@ -139,7 +167,8 @@ namespace Calculator
                 {
                     if (operation == "" || operation == "=")
                     {
-                        if (operation == "=") { 
+                        if (operation == "=")
+                        {
                             operation = "";
                             leftNumber = "";
                         }
@@ -153,20 +182,40 @@ namespace Calculator
                 }
                 else
                 {
-                    if (rightNumber == "")
+                    if (clickedButton == ",")
                     {
-                        if (leftNumber == "")
+                        if (operation == "" || operation == "=")
                         {
-                            leftNumber = "0";
+                            if (operation == "=")
+                            {
+                                operation = "";
+                                leftNumber = "0";
+                            }
+                            AnalyzeDoubleNumbers(clickedButton, ref leftNumber);
                         }
-                        operation = clickedButton;
-                        BlockExpression.Text = (leftNumber + operation);
+                        else
+                        {
+                            AnalyzeDoubleNumbers(clickedButton, ref rightNumber);
+                        }
                     }
                     else
                     {
-                        CountExpressionResult(clickedButton);
-                        if (clickedButton != "=" && BlockExpression.Text != error) { 
-                            operation = clickedButton; 
+                        if (rightNumber == "")
+                        {
+                            if (leftNumber == "")
+                            {
+                                leftNumber = "0";
+                            }
+                            operation = clickedButton;
+                            BlockExpression.Text = (leftNumber + operation);
+                        }
+                        else
+                        {
+                            CountExpressionResult(clickedButton);
+                            if (clickedButton != "=" && BlockExpression.Text != error)
+                            {
+                                operation = clickedButton;
+                            }
                         }
                     }
                 }
@@ -182,11 +231,10 @@ namespace Calculator
             {
                 Close();
             }
-            if (itemValue =="Help")
+            if (itemValue == "Info")
             {
-                MessageBox.Show("Калькулятор. Выполняет сложение, вычитание, " +
-                    "умножение, деление целых чисел." +
-                    "\nНад созданием работала Донская Мария Андреевна.");
+                MessageBox.Show("Calculator. It can sum, subtract, multiply and divide numbers.\n" +
+                    "Made by Donskaya Maria. 2020");
             }
         }
     }

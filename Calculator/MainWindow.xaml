@@ -39,15 +39,17 @@
         <Button x:Name="ButtonZero" Background="PeachPuff" Content="0" Grid.Row="4" Grid.Column="1" Click="Button_Click"/>
         <Button x:Name="ButtonEqual" Background="MistyRose"  Content="=" Grid.Row="4" Grid.Column="2" Click="Button_Click"/>
         <Button x:Name="ButtonFour" Background="Snow"  Content="4" Grid.Row="2" Click="Button_Click"/>
+        <Button x:Name="ButtonDot" Background="BlanchedAlmond" Content="," Grid.Row="0" Grid.Column="3" Click="Button_Click" FontSize="20" Margin="100,0,0,0"/>
 
-        <TextBlock x:Name="BlockExpression" Text="0" HorizontalAlignment="Center" Grid.Row="0" VerticalAlignment="Center" Grid.ColumnSpan="4" FontSize = "18"></TextBlock>
+        <TextBlock x:Name="BlockExpression" Text="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize = "18" Grid.Row="0" Grid.ColumnSpan="3"/>
 
-        <Menu x:Name="MenuBar" Grid.Row="0" Grid.ColumnSpan="4" FontSize="15" VerticalAlignment="Top">
+        <Menu x:Name="MenuBar" Grid.Row="0" FontSize="15" VerticalAlignment="Top" Margin="0,0,118,0">
             <MenuItem Header="File">
                 <MenuItem Header="Exit" Click="MenuItem_Click"/>
             </MenuItem>
-            <MenuItem Header="Info" Click="MenuItem_Click"/>
+            <MenuItem Header="Info" Click="MenuItem_Click" Width="41"/>
         </Menu>
-        
+
+
     </Grid>
 </Window>
