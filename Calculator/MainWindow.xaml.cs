@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
+using Calculator.Model;
+
+
 
 namespace Calculator
 {
@@ -10,213 +14,136 @@ namespace Calculator
     /// 
     public partial class MainWindow : Window
     {
-        public string leftNumber = "";
-        public string rightNumber = "";
-        public string operation = "";
-        public string dot = "";
-        double firstNumber;
-        double secondNumber;
-        double result;
-        const string error = "Error: numbers can not be divided by zero";
-
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        public void ProcessDivision(string get)
-        {
-            if (secondNumber == 0)
-            {
-                BlockExpression.Text = error;
-                ClearVariables();
-            }
-            else
-            {
-                result = firstNumber / secondNumber;
-                GetExpressionResult(get);
-            }
-        }
-
-        public void FindShowNumbers(string numberFromButton, ref string number)
-        {
-            if (numberFromButton == "0" && (number == "" || number == "0"))
-            {
-                number = "0";
-            }
-            else
-            {
-                if (number == "0") { number = ""; }
-                if (number == leftNumber && number == result.ToString()) { number = numberFromButton; }
-                else { number += numberFromButton; }
-            }
-            BlockExpression.Text = (leftNumber + operation + rightNumber);
-        }
-
-        public void AnalyzeDoubleNumbers(string numberFromButton, ref string number)
-        {
-            if (!number.Contains(","))
-            {
-                if (number == "")
-                {
-                    number = "0,";
-                }
-                else if (number == result.ToString())
-                {
-                    number += numberFromButton;
-                }
-                else
-                {
-                    number += numberFromButton;
-                }
-            }
-
-            BlockExpression.Text = (leftNumber + operation + rightNumber);
-
-        }
-
-        public void ClearVariables()
-        {
-            leftNumber = "";
-            rightNumber = "";
-            operation = "";
-        }
-
-        public void GetExpressionResult(string get)
-        {
-            ClearVariables();
-            if (get == "=")
-            {
-                BlockExpression.Text = result.ToString();
-            }
-            else
-            {
-
-                BlockExpression.Text = (result.ToString() + get);
-                operation = get;
-            }
-            leftNumber = result.ToString();
-        }
-
-        public void CountExpressionResult(string get)
-        {
-            firstNumber = double.Parse(leftNumber);
-            secondNumber = double.Parse(rightNumber);
-
-            switch (operation)
-            {
-                case "-":
-                    result = firstNumber - secondNumber;
-                    GetExpressionResult(get);
-                    break;
-                case "+":
-                    result = firstNumber + secondNumber;
-                    GetExpressionResult(get);
-                    break;
-                case "x":
-                    result = firstNumber * secondNumber;
-                    GetExpressionResult(get);
-                    break;
-                case "/":
-                    ProcessDivision(get);
-                    break;
-                default:
-                    BlockExpression.Text = "0";
-                    break;
-            }
-        }
-
+        private const string Error = "Error: numbers can not be divided by zero";
+        private string result;
+        private bool clickedM = false;
+        
+        private readonly Calc myCalc = new Calc();
+        
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             string clickedButton = (String)((Button)e.OriginalSource).Content;
-            int ifNumber;
-
-            bool correct = Int32.TryParse(clickedButton, out ifNumber);
+            bool correct = Int32.TryParse(clickedButton, out _);
 
             if (clickedButton == "C")
             {
                 BlockExpression.Text = "0";
                 ClearVariables();
             }
-
-            else if (clickedButton == "=")
+            else if (clickedButton == "B")
             {
-                if (leftNumber == "")
+                if (myCalc.Operation == "" && myCalc.Operation != "=")
                 {
-                    BlockExpression.Text = "0";
-                }
-                else if (leftNumber != "" && rightNumber == "")
-                {
-                    if (leftNumber.Substring(leftNumber.Length - 1) == ",")
+                    if (clickedButton == "B")
                     {
-                        leftNumber = BlockExpression.Text.Substring(0,
-                            BlockExpression.Text.Length - 1);
+                        if (myCalc.LeftNumber != result)
+                        {
+                            ParseOperationB(ref myCalc.LeftNumber);
+                        }
                     }
-                    BlockExpression.Text = leftNumber;
-                    operation = "=";
                 }
                 else
                 {
-                    CountExpressionResult(clickedButton);
-                    operation = "=";
+                    if (myCalc.RightNumber != "")
+                    {
+                        ParseOperationB(ref myCalc.RightNumber);
+                    }
                 }
+                if (myCalc.Operation == "=")
+                {
+                    BlockExpression.Text = myCalc.LeftNumber;
+                }
+                else
+                {
+                    BlockExpression.Text = myCalc.LeftNumber + myCalc.Operation + myCalc.RightNumber;
+                }
+            }
+            else if (clickedButton == "CE")
+            {
+                if (myCalc.Operation == "" || myCalc.Operation == "=")
+                {
+                    ClearVariables();
+                }
+                else
+                {
+                    myCalc.RightNumber = "0";
+                }
+                BlockExpression.Text = myCalc.LeftNumber + myCalc.Operation + myCalc.RightNumber;
+            }
+            else if (clickedButton == "M+" || clickedButton == "M-" || clickedButton == "MR" 
+                     || clickedButton == "MC" || clickedButton == "MS")
+            {
+                if (myCalc.Operation == "" || myCalc.Operation == "=" || myCalc.RightNumber == "")
+                {
+                    ParseMemorySign(clickedButton, ref myCalc.LeftNumber);
+                    if (clickedButton == "MR")
+                    {
+                        BlockExpression.Text = myCalc.LeftNumber;
+                    }
+                }
+                else
+                {
+                    ParseMemorySign(clickedButton, ref myCalc.RightNumber);
+                    if (clickedButton == "MR")
+                    {
+                        BlockExpression.Text = myCalc.LeftNumber + myCalc.Operation + myCalc.RightNumber;
+                    }
+                }
+            }
+            else if (clickedButton == "+/-")
+            {
+                if (myCalc.Operation == "" || myCalc.Operation == "=")
+                {
+                    AddPlusMinus(ref myCalc.LeftNumber);
+                    BlockExpression.Text = myCalc.LeftNumber;
+                }
+                else
+                {
+                    AddPlusMinus(ref myCalc.RightNumber);
+                    if (myCalc.Operation == myCalc.RightNumber.Substring(0, 1))
+                    {
+                        BlockExpression.Text =  myCalc.LeftNumber + myCalc.Operation + "("+ myCalc.RightNumber + ")";
+                    }
+                    BlockExpression.Text = myCalc.LeftNumber + myCalc.Operation + myCalc.RightNumber;
+                }
+            }
+            else if (clickedButton == "=")
+            {
+                ParseEqualsSign(clickedButton);
             }
             else
             {
-                if (correct == true)
+                if (correct || clickedButton == ",")
                 {
-                    if (operation == "" || operation == "=")
+                    if (myCalc.Operation == "=")
                     {
-                        if (operation == "=")
-                        {
-                            operation = "";
-                            leftNumber = "";
-                        }
-                        FindShowNumbers(clickedButton, ref leftNumber);
+                        ClearVariables();
                     }
-
+                    if (myCalc.Operation == "")
+                    {
+                        GetNumbers(clickedButton, ref myCalc.LeftNumber);
+                    }
                     else
                     {
-                        FindShowNumbers(clickedButton, ref rightNumber);
+                        GetNumbers(clickedButton, ref myCalc.RightNumber);
                     }
+                    BlockExpression.Text = myCalc.LeftNumber + myCalc.Operation + myCalc.RightNumber;
                 }
                 else
                 {
-                    if (clickedButton == ",")
+                    if (myCalc.RightNumber == "")
                     {
-                        if (operation == "" || operation == "=")
-                        {
-                            if (operation == "=")
-                            {
-                                operation = "";
-                                leftNumber = "0";
-                            }
-                            AnalyzeDoubleNumbers(clickedButton, ref leftNumber);
-                        }
-                        else
-                        {
-                            AnalyzeDoubleNumbers(clickedButton, ref rightNumber);
-                        }
+                        myCalc.Operation = clickedButton;
+                        BlockExpression.Text = myCalc.LeftNumber + myCalc.Operation;
                     }
                     else
                     {
-                        if (rightNumber == "")
-                        {
-                            if (leftNumber == "")
-                            {
-                                leftNumber = "0";
-                            }
-                            operation = clickedButton;
-                            BlockExpression.Text = (leftNumber + operation);
-                        }
-                        else
-                        {
-                            CountExpressionResult(clickedButton);
-                            if (clickedButton != "=" && BlockExpression.Text != error)
-                            {
-                                operation = clickedButton;
-                            }
-                        }
+                        ShowResult(clickedButton);
                     }
                 }
             }
@@ -235,6 +162,156 @@ namespace Calculator
             {
                 MessageBox.Show("Calculator. It can sum, subtract, multiply and divide numbers.\n" +
                     "Made by Donskaya Maria. 2020");
+            }
+        }
+
+        private void GetNumbers(string signFromButton, ref string number)
+        {
+            if (signFromButton == ",")
+            {
+                AnalyzeDoubleNumbers(signFromButton, ref number);
+            }
+            else
+            {
+                FindNumbers(signFromButton, ref number);
+            }
+        }
+
+        private void ParseEqualsSign(string signFromButton)
+        {
+            if (myCalc.RightNumber == "")
+            {
+                if (myCalc.LeftNumber[^1..] == ",")
+                {
+                    myCalc.LeftNumber = BlockExpression.Text[..^1];
+                }
+                BlockExpression.Text = myCalc.LeftNumber;
+            }
+            else
+            {
+                ShowResult(signFromButton);
+            }
+            myCalc.Operation = "=";
+        }
+
+        private void ParseOperationB(ref string number)
+        {
+            if (number.Length == 1)
+            {
+                number = "0";
+            }
+            else
+            {
+                number = number[..^1];
+            }
+        }
+
+        private void ParseMemorySign(string signFromButton, ref string number)
+        {
+            switch (signFromButton)
+            {
+                case "MS":
+                    clickedM = true;
+                    myCalc.MemoryNumber = double.Parse(number);
+                    BlockMemory.Text = myCalc.MemoryNumber.ToString();
+                    break;
+                case "M+":
+                    clickedM = true;
+                    myCalc.MemoryNumber += double.Parse(number);
+                    BlockMemory.Text = myCalc.MemoryNumber.ToString();
+                    break;
+                case "M-":
+                    clickedM = true;
+                    myCalc.MemoryNumber -= double.Parse(number);
+                    BlockMemory.Text = myCalc.MemoryNumber.ToString();
+                    break;
+                case "MR":
+                    if (clickedM)
+                    {
+                        number = myCalc.MemoryNumber.ToString();
+                        BlockMemory.Text = myCalc.MemoryNumber.ToString();
+                    }
+                    break;
+                case "MC":
+                    clickedM = false;
+                    myCalc.MemoryNumber = 0;
+                    BlockMemory.Text = "";
+                    break;
+            }
+        }
+
+        private void AddPlusMinus(ref string number)
+        {
+            if (number == "0" || number == "") return; 
+            if (number.Contains("-"))
+            {
+                number = number[1..];
+            }
+            else
+            {
+                number = "-" + number;
+            }
+        }
+        
+        private void ShowResult(string signFromButton)
+        {
+            result = myCalc.CountExpressionResult();
+            GetExpressionResult(signFromButton);
+        }
+        
+        private void GetExpressionResult(string signFromButton)
+        {
+            ClearVariables();
+            if (signFromButton == "=" || result == Error)
+            {
+                BlockExpression.Text = result;
+                if (result == Error)
+                {
+                    result = "0";
+                }
+            }
+            else
+            {
+                BlockExpression.Text = result + signFromButton;
+                myCalc.Operation = signFromButton;
+            }
+            myCalc.LeftNumber = result;
+        }
+        
+        private void ClearVariables()
+        {
+            myCalc.LeftNumber = "0";
+            myCalc.RightNumber = "";
+            myCalc.Operation = "";
+        }
+        
+        private void FindNumbers(string numberFromButton, ref string number)
+        {
+            if (number.Length > 12) return;
+            if (numberFromButton == "0" && (number == "" || number == "0"))
+            {
+                number = "0";
+            }
+            else
+            {
+                if (number == "0")
+                {
+                    number = ""; 
+                }
+                number += numberFromButton;
+            }
+        }
+
+        private void AnalyzeDoubleNumbers(string signFromButton, ref string number)
+        {
+            if (number.Contains(",") || number.Length > 12) return;
+            if (number == "")
+            {
+                number = "0,";
+            }
+            else
+            {
+                number += signFromButton;
             }
         }
     }

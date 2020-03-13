@@ -14,6 +14,7 @@
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -21,28 +22,40 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <Button x:Name="ButtonDelete" Background="AliceBlue" Content="C" Grid.Row="4" Grid.Column="0" Click="Button_Click"/>
+        <Button x:Name="ButtonDelete" Background="AliceBlue" Content="C" Grid.Row="5" Grid.Column="0" Click="Button_Click"/>
         <Button x:Name="ButtonSeven" Background="Beige"  Content="1" Grid.Row="3" Grid.Column="0" Click="Button_Click"/>
         <Button x:Name="ButtonTwo" Background="BlanchedAlmond" Content="2" Grid.Row="3" Grid.Column="1" Click="Button_Click"/>
-        <Button x:Name="ButtonDevide" Background="BurlyWood" Content="/" Grid.Row="1" Grid.Column="3" Click="Button_Click"/>
+        <Button x:Name="ButtonDivide" Background="BurlyWood" Content="/" Grid.Row="1" Grid.Column="3" Click="Button_Click"/>
         <Button x:Name="ButtonNine" Background="LightBlue"  Content="9" Grid.Row="1" Grid.Column="2" Click="Button_Click"/>
-        <Button x:Name="ButtonSummurize" Background="LightPink"  Content="+" Grid.Row="4" Grid.Column="3" Click="Button_Click"/>
+        <Button x:Name="ButtonSummarize" Background="LightPink"  Content="+" Grid.Row="4" Grid.Column="3" Click="Button_Click"/>
         <Button x:Name="ButtonMinus" Background="Ivory" Content="-" Grid.Row="3" Grid.Column="3" Click="Button_Click"/>
         <Button x:Name="ButtonSix" Background="Lavender" Content="6" Grid.Row="2" Grid.Column="2" Click="Button_Click"/>
         <Button x:Name="ButtonX" Background="LemonChiffon"  Content="x" Grid.Row="2" Grid.Column="3" Click="Button_Click"/>
         <Button x:Name="ButtonThree" Background="Linen"  Content="3" Grid.Row="3" Grid.Column="2" Click="Button_Click"/>
         <Button x:Name="ButtonEight" Background="LightSkyBlue" Content="8" Grid.Row="1" Grid.Column="1" Click="Button_Click"/>
         <Button x:Name="ButtonFive" Background="LightYellow"  Content="5" Grid.Row="2" Grid.Column="1" Click="Button_Click"/>
-        <Button x:Name="ButtonOne" Background="PaleGoldenrod"  Content="7" Grid.Row="1" Click="Button_Click"/>
+        <Button x:Name="ButtonOne" Background="PaleGoldenrod"  Content="7" Grid.Row="1" Grid.Column="0" Click="Button_Click"/>
         <Button x:Name="ButtonZero" Background="PeachPuff" Content="0" Grid.Row="4" Grid.Column="1" Click="Button_Click"/>
         <Button x:Name="ButtonEqual" Background="MistyRose"  Content="=" Grid.Row="4" Grid.Column="2" Click="Button_Click"/>
-        <Button x:Name="ButtonFour" Background="Snow"  Content="4" Grid.Row="2" Click="Button_Click"/>
-        <Button x:Name="ButtonDot" Background="BlanchedAlmond" Content="," Grid.Row="0" Grid.Column="3" Click="Button_Click" FontSize="20" Margin="100,0,0,0"/>
-
+        <Button x:Name="ButtonFour" Background="Snow"  Content="4" Grid.Row="2" Grid.Column="0"  Click="Button_Click"/>
+        <Button x:Name="ButtonDot" Background="BlanchedAlmond" Content="," Grid.Row="4" Grid.Column="0" Click="Button_Click"/>
+        
+        <Button x:Name="ButtonBackspace" Background="Snow" Content="B" Grid.Row="5" Grid.Column="1"  Click="Button_Click"/>
+        <Button x:Name="ButtonCe" Background="Snow"  Content="CE" Grid.Row="5" Grid.Column="2"  Click="Button_Click"/>
+        <Button x:Name="ButtonMPlus" Background="Snow"  Content="M+" Grid.Row="5" Grid.Column="3"  Click="Button_Click"/>
+        <Button x:Name="ButtonMMinus" Background="Snow"  Content="M-" Grid.Row="5" Grid.Column="4"  Click="Button_Click"/>
+        <Button x:Name="ButtonMc" Background="Snow"  Content="MC" Grid.Row="4" Grid.Column="4"  Click="Button_Click"/>
+        <Button x:Name="ButtonMr" Background="Snow"  Content="MR" Grid.Row="3" Grid.Column="4"  Click="Button_Click"/>
+        <Button x:Name="ButtonMS" Background="Snow"  Content="MS" Grid.Row="2" Grid.Column="4"  Click="Button_Click"/>
+        <Button x:Name="ButtonPlusMinus" Background="Snow"  Content="+/-" Grid.Row="1" Grid.Column="4"  Click="Button_Click"/>
+        
         <TextBlock x:Name="BlockExpression" Text="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize = "18" Grid.Row="0" Grid.ColumnSpan="3"/>
 
+        <TextBlock x:Name="BlockMemory" Text="" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize = "18" Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="2"/>
+        
         <Menu x:Name="MenuBar" Grid.Row="0" FontSize="15" VerticalAlignment="Top" Margin="0,0,118,0">
             <MenuItem Header="File">
                 <MenuItem Header="Exit" Click="MenuItem_Click"/>
